@@ -1,0 +1,20 @@
+{
+  "name": "TopVis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "*",
+    "curl-to-node": "^0.1.0",
+    "ejs": "^2.4.2",
+    "express": "*",
+    "jade": "*",
+    "morgan": "*",
+    "neo4j-driver": "*"
+  }
+}
