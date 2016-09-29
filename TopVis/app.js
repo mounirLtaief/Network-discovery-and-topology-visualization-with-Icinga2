@@ -1,127 +1,68 @@
 var express = require('express');
-var routes = require('./routes');
-//var linkurious = require('./linkurious');
-//var home = require('./routes/home')
-//var user = require('./routes/user');
 var path = require('path');
+var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var http = require('http');
 var bodyParser = require('body-parser');
-//var neo4j = require('neo4j-driver').v1;
-//var graph = require('./routes/graph');
 var cons = require('consolidate');
-//var util = require('util')
-//var $ = require('jquery');
-//var Client = require('node-rest-client').Client;
 var request = require('request');
-//var querystring = require('querystring');
-//var https = require('https')
+var flash = require('connect-flash');
+var expressSession = require('express-session');
+var passport = require('passport');
+var Strategy = require('passport-local').Strategy;
+var neo4j = require('neo4j-driver').v1;
+var driver = neo4j.driver('bolt://localhost',neo4j.auth.basic('neo4j','azerty159'));
+var session = driver.session()
+var routes = require('./routes/index');
+var users = require('./routes/users');
+
+// Init App
 var app = express();
-//var curlToNode = require('curl-to-node');
-//var got = require('got');
 
 app.set('port', process.env.PORT || 3000);
-// View Engin
-// assign the swig engine to .html files
-//app.engine('html', cons.ejs);
-// set .html as the default extension
-//app.set('view engine', 'html');
-app.set('views', __dirname + '/views');
 
-//app.set('views',path.join(__dirname,'views'));
-//app.set('view engine','jade');
+//app.set('views', __dirname + '/views');
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine','ejs');
+
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false }));
+app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname,'public')));
 
+app.use(expressSession({
+    secret: 'D5Y*A0149Qspnkapwdr1sz26z369rodmlvq9pamkfc125493sjdhdks321456987523djdndaaqOKDSLMP',
+    saveUninitialized: true,
+    resave: true
+}));
 
-//development only
-//if ('development' == app.get('env')) {
-  //  app.use(bodyParser.errorHandler());
-//}
-app.get('/', routes.index);
-//app.get('/users', user.list);
-//app.get('/home',home.graph);
-//app.get('/graph',graph.draw);
+// Passport init
+app.use(passport.initialize());
+app.use(passport.session());
 
-//app.get('/about',function(req,res){
- // res.sendFile(path.join(__dirname+'/views/basic.html'));
-//});
-//app.get('/index.html',function(req,res){
- // res.sendFile(path.join(__dirname+'/views/index.html'));
-//});
-//app.get('/graph',routes.home,{
-//	links: linkurious
-//});
+// Connect Flash
+app.use(flash());
 
-//var driver = neo4j.driver('bolt://localhost',neo4j.auth.basic('neo4j','azerty159'));
-//var session = driver.session()
-	
-app.get('/da5la',routes.index,function(req,res){
-	var username = "root";
-	var password = "admin";
-	var authenticationHeader = "Basic " + new Buffer(username + ":" + password).toString("base64");
-	var port = "5665";
-	var host = "172.17.0.2";
-	var headers = {
-				"Authorization": authenticationHeader,
-				'Accept': 'application/json',
-				'X-HTTP-Method-Override': 'GET'
-		};
-
-	request(   
-		{
-		url: "https://" + host + ":" + port + "/v1/objects/hosts/?attrs=name&attrs=address",
-		method: 'GET',
-		headers: headers,
-		//body: hosts,
-		rejectUnauthorized: false
-			},
-	function (error, response, body) {
- 		if (!error && response.statusCode == 200) {
-			 //choft icinga2api lahne ya5ou data mte3 body w ki to5rej men fonction hedhi m3adech defini  
-			 icinga2api = JSON.parse(body);
-        	console.log(body);
-			
-    	}else{
-		console.log(error);
-		}
-		} 
-		 );
+// Global Vars
+app.use(function (req, res, next) {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  res.locals.user = req.user || null;
+  next();
 });
-//app.get('/start', function(req,res){
-	//session
-			//.run('MATCH(d:device) RETURN d')
-			//.then(function(result){
-				//var deviceArr = [];
-				//result.records.forEach(function(record){
-					//console.log(record._fields[0].properties.Services);
-					//deviceArr.push({
-						//id: record._fields[0].identity.low,
-						//prop: record._fields[0].properties.Services, 
-						//});
-					//});
-					//res.render('index',{
-						//devices : deviceArr
-						//});
-			//})
-			//.catch(function(err){
-				//console.log(err)
-	
-//	res.render('render');	
-//	});
 
-//app.listen(3000);
-//console.log('server Started on Port 3000');
+app.use('/', routes);
+app.use('/users', users);
+//app.use('/account',account);
 
 http.createServer(app).listen(app.get('port'), function() {
     console.log('Express server listening on port' + app.get('port'));
 	
 });    
-
 app.post('/icinga2api', function(req, res){
 	var username = "root"; 
 	var password = "admin";
@@ -199,4 +140,3 @@ app.post('/icinga2api', function(req, res){
 	}
 	
 		});
-//module.exports = app;
