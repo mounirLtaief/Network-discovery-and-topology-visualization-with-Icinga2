@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html>
+<link href="../stylesheets/font-awesome.min.css" rel="stylesheet">
+<script src="../js/linkurious/lib/dagre.js"></script>
+<!-- START SIGMA IMPORTS -->
+<script src="../js/linkurious/src/sigma.core.js"></script>
+<script src="../js/linkurious/src/conrad.js"></script>
+<script src="../js/linkurious/src/utils/sigma.utils.js"></script>
+<script src="../js/linkurious/src/utils/sigma.polyfills.js"></script>
+<script src="../js/linkurious/src/sigma.settings.js"></script>
+<script src="../js/linkurious/src/classes/sigma.classes.dispatcher.js"></script>
+<script src="../js/linkurious/src/classes/sigma.classes.configurable.js"></script>
+<script src="../js/linkurious/src/classes/sigma.classes.graph.js"></script>
+<script src="../js/linkurious/src/classes/sigma.classes.camera.js"></script>
+<script src="../js/linkurious/src/classes/sigma.classes.quad.js"></script>
+<script src="../js/linkurious/src/captors/sigma.captors.mouse.js"></script>
+<script src="../js/linkurious/src/captors/sigma.captors.touch.js"></script>
+<script src="../js/linkurious/src/renderers/sigma.renderers.canvas.js"></script>
+<script src="../js/linkurious/src/renderers/sigma.renderers.webgl.js"></script>
+<script src="../js/linkurious/src/renderers/sigma.renderers.svg.js"></script>
+<script src="../js/linkurious/src/renderers/sigma.renderers.def.js"></script>
+<script src="../js/linkurious/src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+<script src="../js/linkurious/src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+<script src="../js/linkurious/src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+<script src="../js/linkurious/src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+<script src="../js/linkurious/src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+<script src="../js/linkurious/src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+<script src="../js/linkurious/src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+<script src="../js/linkurious/src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+<script src="../js/linkurious/src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+<script src="../js/linkurious/src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+<script src="../js/linkurious/src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+<script src="../js/linkurious/src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+<script src="../js/linkurious/src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+<script src="../js/linkurious/src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+<script src="../js/linkurious/src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+<script src="../js/linkurious/src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+<script src="../js/linkurious/src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+<script src="../js/linkurious/src/renderers/svg/sigma.svg.utils.js"></script>
+<script src="../js/linkurious/src/renderers/svg/sigma.svg.nodes.def.js"></script>
+<script src="../js/linkurious/src/renderers/svg/sigma.svg.edges.def.js"></script>
+<script src="../js/linkurious/src/renderers/svg/sigma.svg.edges.curve.js"></script>
+<script src="../js/linkurious/src/renderers/svg/sigma.svg.edges.curvedArrow.js"></script>
+<script src="../js/linkurious/src/renderers/svg/sigma.svg.labels.def.js"></script>
+<script src="../js/linkurious/src/renderers/svg/sigma.svg.hovers.def.js"></script>
+<script src="../js/linkurious/src/middlewares/sigma.middlewares.rescale.js"></script>
+<script src="../js/linkurious/src/middlewares/sigma.middlewares.copy.js"></script>
+<script src="../js/linkurious/src/misc/sigma.misc.animation.js"></script>
+<script src="../js/linkurious/src/misc/sigma.misc.bindEvents.js"></script>
+<script src="../js/linkurious/src/misc/sigma.misc.bindDOMEvents.js"></script>
+<script src="../js/linkurious/src/misc/sigma.misc.drawHovers.js"></script>
+<!-- END SIGMA IMPORTS -->
+<script src="../js/linkurious/plugins/sigma.plugins.colorbrewer/sigma.plugins.colorbrewer.js"></script>
+<script src="../js/linkurious/plugins/sigma.plugins.design/sigma.plugins.design.js"></script>
+
+<!-- Drag nodes --> 
+<script src="../js/linkurious/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+
+<script src="../js/linkurious/plugins/sigma.helpers.graph/sigma.helpers.graph.js"></script>
+<script src="../js/linkurious/plugins/sigma.plugins.activeState/sigma.plugins.activeState.js"></script>
+<script src="../js/linkurious/plugins/sigma.plugins.select/sigma.plugins.select.js"></script>
+<script src="../js/linkurious/plugins/sigma.plugins.keyboard/sigma.plugins.keyboard.js"></script>
+
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/settings.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/webgl/sigma.webgl.nodes.def.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/webgl/sigma.webgl.nodes.fast.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/webgl/sigma.webgl.edges.def.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/webgl/sigma.webgl.edges.fast.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/webgl/sigma.webgl.edges.arrow.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/canvas/sigma.canvas.labels.def.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/canvas/sigma.canvas.hovers.def.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/canvas/sigma.canvas.nodes.def.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/canvas/sigma.canvas.nodes.cross.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/canvas/sigma.canvas.nodes.diamond.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/canvas/sigma.canvas.nodes.equilateral.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/canvas/sigma.canvas.nodes.square.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/canvas/sigma.canvas.nodes.star.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/canvas/sigma.canvas.edges.def.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/canvas/sigma.canvas.edges.curve.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/canvas/sigma.canvas.edges.arrow.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+
+<script src="../js/linkurious/plugins/sigma.renderers.linkurious/canvas/sigma.canvas.edges.autoCurve.js"></script>
+
+<script src="../js/linkurious/plugins/sigma.renderers.customEdgeShapes/sigma.canvas.edges.dashed.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.customEdgeShapes/sigma.canvas.edges.dotted.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.customEdgeShapes/sigma.canvas.edges.parallel.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.customEdgeShapes/sigma.canvas.edges.tapered.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.customEdgeShapes/sigma.canvas.edgehovers.dashed.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.customEdgeShapes/sigma.canvas.edgehovers.dotted.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.customEdgeShapes/sigma.canvas.edgehovers.parallel.js"></script>
+<script src="../js/linkurious/plugins/sigma.renderers.customEdgeShapes/sigma.canvas.edgehovers.tapered.js"></script>
+
+<script src="../js/linkurious/plugins/sigma.plugins.tooltips/sigma.plugins.tooltips.js"></script>
+<script src="../js/mustache.min.js"></script>
+
+<script src="../js/linkurious/plugins/sigma.plugins.animate/sigma.plugins.animate.js"></script>
+<script src="../js/linkurious/plugins/sigma.layouts.dagre/sigma.layout.dagre.js"></script>
+
+<script src="../js/jquery-3.1.0.min.js"></script>
+
+<!-- we force the loading of the font awesome -->
+<i class="fa fa-camera-retro fa-1x" style="color: rgba(0,0,0,0);"></i>
+<head>
+    <title>TopVis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300,400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
+    <!-- CSS Libs -->
+    <link rel="stylesheet" type="text/css" href="../Bootstrap/lib/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../Bootstrap/lib/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../Bootstrap/lib/css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="../Bootstrap/lib/css/bootstrap-switch.min.css">
+    <link rel="stylesheet" type="text/css" href="../Bootstrap/lib/css/checkbox3.min.css">
+    <link rel="stylesheet" type="text/css" href="../Bootstrap/lib/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="../Bootstrap/lib/css/dataTables.bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../Bootstrap/lib/css/select2.min.css">
+    <!-- CSS App -->
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+    <link rel="stylesheet" type="text/css" href="../css/themes/flat-blue.css">
+    <link rel="stylesheet" type="text/css" href="../css/themes/flat-green.css">
+</head>
+
+<body class="flat-blue">
+    <div class="app-container">
+        <div class="row content-container">
+            <nav class="navbar navbar-default navbar-fixed-top navbar-top">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-expand-toggle">
+                            <i class="fa fa-bars icon"></i>
+                        </button>
+                        <ol class="breadcrumb navbar-breadcrumb">
+                            <li class="active">Overview</li>
+                        </ol>
+                        <button type="button" class="navbar-right-expand-toggle pull-right visible-xs">
+                            <i class="fa fa-th icon"></i>
+                        </button>
+                    </div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <button type="button" class="navbar-right-expand-toggle pull-right visible-xs">
+                            <i class="fa fa-times icon"></i>
+                        </button>
+                        <li class="dropdown profile">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Admin <span class="caret"></span></a>
+                            <ul class="dropdown-menu animated fadeInDown">
+                                <li>
+                                    <div class="profile-info">
+                                        <h4 class="username">Admin</h4>
+                                        <p>TopVis</p>
+                                        <div class="btn-group margin-bottom-2x" role="group">
+                                         <!-- <a href="../templates/account/account_setting.html" class="btn btn-default"><i class="fa fa-user"></i> Account</a>-->
+                                            <button type="button" class="btn btn-default"><i class="fa fa-user"></i> Account</button>
+                                            <button type="button" class="btn btn-default"><i class="fa fa-sign-out"></i> Logout</button>
+                                          <!--  <form action="/users/logout" method="post">
+                                              <input type="submit" value="Go to Google" />
+                                              <button type="submit" class="btn btn-default"><i class="fa fa-sign-out"></i> Logout</button>
+                                           </form>-->
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="side-menu sidebar-inverse">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="side-menu-container">
+                        <div class="navbar-header">
+                            <a class="navbar-brand" href="#">
+                                <div class="icon fa fa-paper-plane"></div>
+                                <div class="title">TopVis V.1.0</div>
+                            </a>
+                            <button type="button" class="navbar-expand-toggle pull-right visible-xs">
+                                <i class="fa fa-times icon"></i>
+                            </button>
+                        </div>
+                        
+                        <ul class="nav navbar-nav">
+                            <li class="active">
+                                <a href="index.html">
+                                    <span class="icon fa fa-desktop"></span><span class="title">Overview</span>
+                                </a>
+                            </li>
+                            
+                            <!-- Dropdown-->
+                            <li class="panel panel-default dropdown">
+                                <a data-toggle="collapse" href="#component-example">
+                                    <span class="icon fa fa-cubes"></span><span class="title">Workspace</span>
+                                </a>
+                                <!-- Dropdown level 1 -->
+                                <div id="component-example" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <ul class="nav navbar-nav">
+                                            <li><a href="./workspace/add_device.html">Add</a>
+                                            </li>
+                                            <li><a href="./workspace/modify_device.html">Modify</a>
+                                            </li>
+                                            <li><a href="./workspace/delete_device.html">Delete</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- Dropdown-->
+                            <li class="panel panel-default dropdown">
+                                <a data-toggle="collapse" href="#dropdown-icon">
+                                    <span class="icon fa fa-archive"></span><span class="title">Configuration</span>
+                                </a>
+                                <!-- Dropdown level 1 -->
+                                <div id="dropdown-icon" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <ul class="nav navbar-nav">
+                                            <<li><a href="./configuration/neo4j_config.html">Neo4j DB</a>
+                                            </li>
+                                            <li><a href="./configuration/Icinga2API_config.html">Icinga2 API</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="./feedbacks.html">
+                                    <span class="icon fa fa-thumbs-o-up"></span><span class="title">TopVis</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- /.navbar-collapse -->
+                </nav>
+            </div>
+            <!-- Main Content -->
+          <div id="container">
+                <link href="stylesheets/style1.css" rel="stylesheet" >
+                    <div id="graph-container"></div>
+            </div>
+            <script>
+ sigma.utils.pkg('sigma.canvas.edges');
+/* sigma.canvas.edges.t = function(edge, source, target, context, settings) {
+  var color = edge.color,
+      prefix = settings('prefix') || '',
+      edgeColor = settings('edgeColor'),
+      defaultNodeColor = settings('defaultNodeColor'),
+      defaultEdgeColor = settings('defaultEdgeColor');
+  if (!color)
+    switch (edgeColor) {
+      case 'source':
+        color = source.color || defaultNodeColor;
+        break;
+      case 'target':
+        color = target.color || defaultNodeColor;
+        break;
+      default:
+        color = defaultEdgeColor;
+        break;
+    }
+     context.strokeStyle = color;
+     context.lineWidth = edge[prefix + 'size'] || 1;
+     context.beginPath();
+     context.moveTo(
+    source[prefix + 'x'],
+    source[prefix + 'y']
+  );
+  context.lineTo(
+    source[prefix + 'x'],
+    target[prefix + 'y']
+  );
+  context.lineTo(
+    target[prefix + 'x'],
+    target[prefix + 'y']
+  );
+  context.stroke();
+};*/
+var i,
+    s,
+    design,
+    g = {
+      nodes: [],
+      edges: []
+    };
+
+// Generate a graph:
+var posX = 4;
+var posY = 2;
+var snmpifArr= [];
+var servicesArr=[];
+var vulsArr= [];
+
+<%snmp_scan_dev.forEach(function(device){ %>
+
+<%(device.interfaces).forEach(function(interface){ %>
+    snmpifArr.push({
+        name: '<%=interface.name%>',
+        mac: '<%=interface.mac%>',
+        address:'<%=interface.ipaddress%>',
+        mask: '<%=interface.mask%>',
+        adminstate: '<%=interface.adminstate%>',
+        operationstate: '<%=interface.operationstate%>',
+        type: '<%=interface.type%>',
+    });
+    <%}) %>
+<%(device.services).forEach(function(service){ %>
+        servicesArr.push({
+                          name: '<%= service.name%>',
+                          description: '<%= service.description%>',
+                          protocol: '<%= service.protocol%>',
+                          ports: '<%= service.ports%>',
+                          status: '<%= service.status%>',
+        });
+<%}) %>
+<% (device.vuls).forEach(function(vul){ %>
+        vulsArr.push({
+                          name: '<%=vul.name%>',
+                          description: '<%= vul.type%>',
+                          type: '<%= vul.protocol%>',
+                          resolution: '%= vul.resolution%>',
+                          impact: '<%= vul.impact%>',
+        });
+<%}) %>
+host = {
+            name: '<%=device.hostinfo.name%>',
+            desc: '<%=device.hostinfo.os%>',
+            os: '<%=device.hostinfo.os%>',
+        };
+system = {
+              hostname: '<%=device.sysinfo.name%>',
+              desc : '<%=device.sysinfo.description%>',
+              type: '<%=device.sysinfo.type%>',
+              };
+  if(system.type=='Host'){
+      type = 'A';
+  } else if(system.type=='Router'){
+      type = 'C';
+  }else if(system.type=='Printer'){
+      type = 'D';
+  }else {
+      type = 'B';
+  }
+g.nodes.push({
+id: <%= device.id%>,
+label: '<%=device.sysinfo.type%>' +'@' + '<%=device.sysinfo.name%>',
+x: posX,
+y: posY,
+//size: 10,
+//color: '#666',
+data: {
+      quantity: 10,
+      quality: type,
+    },
+data1: {
+      snmp: 'true',
+      scan: 'true',
+      host : host,
+      system : system,
+      interfaces: snmpifArr,
+      services: servicesArr,
+      vuls: vulsArr,
+      icinga2 : '<%=device.icinga2%>',
+      icinga2name: '<%=device.icinga2name%>'
+}
+ });
+posX += 2;
+posY += 1;
+
+<%}) %>
+
+servicesArr = [];
+vulsArr = [];
+<%scan_dev.forEach(function(device){ %>
+hostinfo = {
+            name: '<%=device.hostinfo.name%>',
+            desc: '<%=device.hostinfo.os%>',
+            os: '<%=device.hostinfo.os%>',
+};
+Interfaces =  {
+              hostname: '<%=device.interfaces.hostnames%>',
+              description: '<%=device.interfaces.description%>',
+              mac: '<%=device.interfaces.mac%>',
+              type: '<%=device.interfaces.type%>',
+              address: '<%=device.interfaces.address%>',
+              network_segment: '<%=device.interfaces.network_segment%>',
+              mask: '<%=device.interfaces.mask%>',
+              gateway: '<%=device.interfaces.gateway%>',
+};
+if (Interfaces.gateway == Interfaces.address){
+  type = 'C';
+} else {
+  type = 'A';
+}
+<%(device.services).forEach(function(service){ %>
+        servicesArr.push({
+                          name: '<%=service.name%>',
+                          description: '<%=service.description%>',
+                          protocol: '<%=service.protocol%>',
+                          ports: '<%=service.ports%>',
+                          status: '<%=service.status%>',
+        });
+<%}) %>
+
+<% (device.vuls).forEach(function(vul){ %>
+        vulsArr.push({
+                          name: '<%=vul.name%>',
+                          type: '<%=vul.type%>',
+                          description: '<%=vul.protocol%>',
+                          resolution: '<%=vul.resolution%>',
+                          impact: '<%=vul.impact%>',
+        });
+<%}) %>
+
+g.nodes.push({
+id: <%=device.id%>,
+label: '<%=device.interfaces.hostnames%>' +'@'+'<%=device.interfaces.address%>',
+x: posX,
+y: posY,
+//size: 10,
+//color: '#666',
+data: {
+      quantity: 10,
+      quality: type,
+    },
+data1: {
+      snmp: 'false',
+      scan: 'true',
+      host : hostinfo,
+      interfaces: Interfaces,
+      services: servicesArr,
+      vuls: vulsArr,
+      icinga2 : '<%=device.icinga2%>',
+      icinga2name: '<%=device.icinga2name%>'
+}
+ });
+posX += 2;
+posY += 1;
+
+<%}) %>
+
+snmpifArr= []
+
+<% snmp_dev.forEach(function(device){ %>
+<% (device.interfaces).forEach(function(interface){ %>
+    snmpifArr.push({
+        name: '<%=interface.name%>',
+        mac: '<%=interface.mac%>',
+        address: '<%=interface.ipaddress%>',
+        mask: '<%=interface.mask%>',
+        adminstate: '<%=interface.adminstate%>',
+        operationstate: '<%=interface.operationstate%>',
+        type: '<%=interface.type%>',
+    });
+    <%}) %>
+systeminfo = {
+              hostname: '<%=device.systeminfo.name%>',
+              desc : '<%=device.systeminfo.description%>',
+              type: '<%=device.systeminfo.type%>',
+};
+if(systeminfo.type=='Host'){
+      type = 'A';
+  } else if(systeminfo.type=='Router'){
+      type = 'C';
+  }else if(systeminfo.type=='Printer'){
+      type = 'D';
+  }else {
+      type = 'B';
+  }
+g.nodes.push({
+id: <%= device.id%>,
+label: '<%=device.systeminfo.type%>' + '@' + '<%=device.systeminfo.name%>',
+x: posX,
+y: posY,
+//size: 10,
+//color: '#666',
+data: {
+      quantity: 10,
+      quality: 'C',
+    },
+data1: {
+      snmp: 'true',
+      scan: 'false',
+      system : systeminfo,
+      interfaces: snmpifArr,
+      icinga2 : '<%=device.icinga2%>',
+      icinga2name: '<%=device.icinga2name%>'
+}
+});
+posX += 2;
+posY += 1;
+
+<%}) %>
+
+<% rest_dev.forEach(function(device){ %>
+g.nodes.push({
+id: <%= device.id%>,
+label: 'device' + '@' + '<%=device.address%>',
+x: posX,
+y: posY,
+//size: 10,
+//color: '#666',
+data: {
+      quantity: 10,
+      quality: 'A',
+    },
+data1:{
+        snmp: 'false',
+        scan: 'false',
+        ipAddress: '<%=device.address%>',
+        mac : '<%=device.mac%>',
+        icinga2 : '<%=device.icinga2%>',
+        icinga2name: '<%=device.icinga2name%>'
+}
+});
+posX += 2;
+posY += 1;
+ 
+<%}) %>
+
+
+<% links.forEach(function(link){ %>
+  g.edges.push({
+    id: <%= link.id %>,
+    source: <%= link.source %>,
+    target: <%= link.target %>,
+    //size: 10,
+    //type: 't',
+    //color: '#ccc',
+    data1 : {
+      interface0: '<%=link.interface0 %>',
+      interface1: '<%=link.interface1 %>'
+    },
+    data: {
+      quantity: 7,
+      quality: 'B',
+    }
+  });
+   <% }) %>
+
+// Create a custom color palette:
+var myPalette = {
+  aQualitativeScheme: {
+    'A': '#7fc97f',
+    'B': '#beaed4',
+    'C': '#fdc086'
+  },
+  colorbrewer: {
+    sequentialGreen: sigma.plugins.colorbrewer.BuGn
+  },
+  ggplot2: {
+    sequentialBlue: {
+      7: ['#132b43','#1d3f5d','#27547a','#326896','#3d7fb5','#4897d4','#54aef3']
+    },
+  },
+  aSetScheme: {
+    7: ["#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00","#ffff33","#a65628"]
+  },
+  nodeTypeScheme: {
+    'A': 'square',
+    'B': 'diamond',
+    'C': 'square'
+  },
+  edgeTypeScheme: {
+    'A': 'tapered'
+  },
+  imageScheme: {
+    'A': {
+      url: 'img/host.png',
+      // scale/clip are ratio values applied on top of 'size'
+      scale: 1,
+      clip: 1
+    },
+    'B': {
+      url: 'img/switch.png',
+      scale: 1,
+      clip: 1
+    },
+    'C': {
+      url: 'img/router.png',
+      scale: 1,
+      clip: 1
+    }
+  },
+  iconScheme: {
+    'A': {
+      font: 'FontAwesome',
+      scale: 0.2,
+      color: '#fff',
+      content: "\uF11b"
+    },
+    'B': {
+      font: 'FontAwesome',
+      scale: 0.2,
+      color: '#fff',
+      content: "\uF11c"
+    },
+    'C': {
+      font: 'FontAwesome',
+      scale: 0.2,
+      color: '#fff',
+      content: "\uF11d"
+    }
+  }
+};
+
+var myStyles = {
+  nodes: {
+    label: {
+      by: 'data1',
+      format: function(value) { 
+        if(value.snmp=='true' && value.scan=='true'){
+            return '#'+value.system.type+'@'+value.system.hostname;
+        }else if(value.snmp=='true' && value.scan=='false'){
+              return '#'+value.system.type+'@'+value.system.hostname;
+        }else if(value.snmp=='false' && value.scan=='true'){
+            return '#'+ value.interfaces.hostname+'@'+value.interfaces.address; 
+        }else {
+            return '#device'+'@'+value.ipAddress; 
+        }
+         }
+    },
+    size: {
+      by: 'data.quantity',
+      bins: 7,
+      min: 2,
+      max: 40
+    },
+    color: {
+      by: 'data.quality',
+      scheme: 'aQualitativeScheme'
+    },
+    type: {
+      by: 'data.quality',
+      scheme: 'nodeTypeScheme'
+    },
+    // either image or icon:
+    image: {
+       by: 'data.quality',
+       scheme: 'imageScheme'
+     },
+    icon: {
+      by: 'data.quality',
+      scheme: 'iconScheme'
+    }
+  },
+  edges: {
+    label: {
+      by: 'data1',
+      format: function(value) { 
+        if(value.interface0 && value.interface1){
+            return '#'+value.interface0+'--'+'#'+value.interface1;
+        }else if(value.interface0 && !(value.interface1)){
+              return '#'+value.interface0;
+        }else if(value.interface1 && !(value.interface0)){
+            return '#'+value.interface1; 
+        }else {
+            return '#link'; 
+        }
+         }
+    }, 
+    color: {
+      by: 'data.quantity',
+      scheme: 'ggplot2.sequentialBlue', // alt: colorbrewer.sequentialGreen
+      bins: 7
+    },
+    size: {
+      by: 'data.quantity',
+      bins: 7,
+      min: 2,
+      max: 5
+    },
+   // type: 't'//{  not implemented in webgl renderer
+      //by: 'data.quality',
+      //scheme: 'edgeTypeScheme'
+   // }
+  }
+};
+
+function init () {
+  // Instantiate sigma:
+  s = new sigma({
+    graph: g,
+    renderer: {
+      container: document.getElementById('graph-container'),
+      type: 'canvas'
+    },
+    settings: {
+      enableEdgeHovering: true,
+       edgeHoverExtremities: true,
+       shortLabelsOnHover: true,
+      // labelAlignment: "center","left", "right", "top", "bottom", "center", "inside"
+     //  drawEdgeLabels: false,
+      // drawLabels: false,
+      //minNodeSize: 1,
+      //maxNodeSize: 5,
+      //minNodeSize: 6,
+      //maxNodeSize: 6,
+      //minEdgeSize: 1,
+      //maxEdgeSize: 6,
+      //dragNodeStickiness: 0.01,
+      //nodeBorderSize: 5,
+     // defaultNodeBorderColor: '#fff',
+     // enableEdgeHovering: true,
+     edgeHoverHighlightNodes: 'square',
+    }
+  });
+
+  // Instanciate the design:
+  design = sigma.plugins.design(s, {
+    styles: myStyles,
+    palette: myPalette
+  });
+
+  design.apply();
+
+  // The visual variables currently applied to the nodes
+  var activeNodeStyles = {};
+  Object.keys(design.styles.nodes).forEach(function (visualVariable) {
+    if (design.styles.nodes[visualVariable].active) {
+      activeNodeStyles[visualVariable] = design.styles.nodes[visualVariable];
+    }
+  });
+  console.log('active node styles', activeNodeStyles);
+
+  // The visual variables currently applied to the edges
+  var activeEdgeStyles = {};
+  Object.keys(design.styles.edges).forEach(function (visualVariable) {
+    if (design.styles.edges[visualVariable].active) {
+      activeEdgeStyles[visualVariable] = design.styles.edges[visualVariable];
+    }
+  });
+  console.log('active edge styles', activeEdgeStyles);
+  var config = {
+  node: [{
+    show: 'hovers',
+    hide: 'hovers',
+    cssClass: 'sigma-tooltip',
+    position: 'left',
+    autoadjust: true,
+   
+    renderer: function(node) {
+        // The function context is s.graph
+          node.degree = this.degree(node.id);
+           // template 
+          if( ( node.data1.snmp=='true') && (node.data1.scan=='true') ) {
+            template=
+                      '<div class="arrow"></div>' +
+                      ' <div class="sigma-tooltip-header">{{label}}</div>' +
+                      '  <div class="sigma-tooltip-body">' +
+                      '      <table>' +
+                      '      <tr><th>Hostname</th> <td>{{data1.system.hostname}}</td></tr>' +
+                      '      <tr><th>Description</th> <td>{{data1.system.desc}}</td></tr>' +
+                      '      <tr><th>OS</th> <td>{{data1.host.os}</td></tr>' +
+                      '      <tr><th>Number of Interfaces</th> <td>{{data1.interfaces.length}}</td></tr>' +
+                      '      <tr><th>Number of running services</th> <td>{{data1.services.length}}</td></tr>' +
+                      '      <tr><th>Number of vulnerabilties</th> <td>{{data1.vuls.length}}</td></tr>' +
+                      '      <tr><th>monitord by icinga2 </th> <td>{{data1.icinga2}}</td></tr>' +
+                      '    </table>' +
+                      '  </div>' +
+                      '  <div class="sigma-tooltip-footer">Number of connections: {{degree}}</div>';
+          }else if(node.data1.snmp=='true' && node.data1.scan=='false') {
+                template=
+                      '<div class="arrow"></div>' +
+                      ' <div class="sigma-tooltip-header">{{label}}</div>' +
+                      '  <div class="sigma-tooltip-body">' +
+                      '      <table>' +
+                      '      <tr><th>Hostname</th> <td>{{data1.system.hostname}}</td></tr>' +
+                      '      <tr><th>Description</th> <td>{{data1.system.desc}}</td></tr>' +
+                      '      <tr><th>Type</th> <td>{{data1.system.type}</td></tr>' +
+                      '      <tr><th>Number of Interfaces</th> <td>{{data1.interfaces.length}}</td></tr>' +
+                      '      <tr><th>monitord by icinga2 </th> <td>{{data1.icinga2}}</td></tr>' +
+                      '    </table>' +
+                      '  </div>' +
+                      '  <div class="sigma-tooltip-footer">Number of connections: {{degree}}</div>';
+           }else if(node.data1.snmp=='false' && node.data1.scan=='true') {
+                  template=
+                      '<div class="arrow"></div>' +
+                      ' <div class="sigma-tooltip-header">{{label}}</div>' +
+                      '  <div class="sigma-tooltip-body">' +
+                      '      <table>' +
+                      '      <tr><th>Hostname</th> <td>{{data1.interfaces.hostname}}</td></tr>' +
+                      '      <tr><th>OS</th> <td>{{data1.host.os}</td></tr>' +
+                      '      <tr><th>IP</th> <td>{{data1.interfaces.address}}</td></tr>' +
+                      '      <tr><th>MAC</th> <td>{{data1.interfaces.mac}}</td></tr>' +
+                      '      <tr><th>Number of running services</th> <td>{{data1.services.length}}</td></tr>' +
+                      '      <tr><th>Number of vulnerabilties</th> <td>{{data1.vuls.length}}</td></tr>' +
+                      '      <tr><th>monitord by icinga2 </th> <td>{{data1.icinga2}}</td></tr>' +
+                      '    </table>' +
+                      '  </div>' +
+                      '  <div class="sigma-tooltip-footer">Number of connections: {{degree}}</div>';
+            }else {
+                    template =
+                            '<div class="arrow"></div>' +
+                            ' <div class="sigma-tooltip-header">{{label}}</div>' +
+                            '  <div class="sigma-tooltip-body">' +
+                            '      <table>' +
+                            '      <tr><th>IP</th> <td>{{data1.ipAddress}}</td></tr>' +
+                            '      <tr><th>MAC</th> <td>{{data1.mac}}</td></tr>' +
+                            '      <tr><th>monitord by icinga2 </th> <td>{{data1.icinga2}}</td></tr>' +
+                            '    </table>' +
+                            '  </div>' +
+                            '  <div class="sigma-tooltip-footer">Number of connections: {{degree}}</div>';
+                 }
+              // Returns an HTML string:
+            return Mustache.render(template, node);
+
+             // Returns a DOM Element:
+            //var el = document.createElement('div');
+              //return el.innerHTML = Mustache.render(template, node);
+    }
+  }, {
+    show: 'rightClickNode',
+    cssClass: 'sigma-tooltip',
+    position: 'top',
+    autoadjust: true,
+    renderer: function(node) {
+      if (node.data1.icinga2=='true'){
+          var data = {};
+					data.name = node.data1.icinga2name;
+					data.type = "GET";
+          $.ajax({
+						type: 'POST',
+						data: JSON.stringify(data),
+				        contentType: 'application/json',
+                        url: 'http://localhost:3000/icinga2api',						
+                        success: function(data) {
+                          var servNomber = 0;
+                          template=
+                                   '<div class="arrow"></div>' +
+                                   ' <div class="sigma-tooltip-header">Icinga2 information</div>' +
+                                   '  <div class="sigma-tooltip-body">';
+                          data.results.forEach(function(info){
+                            if(servNomber == 0){
+                                  template+=
+                                   '   <p> #'+info.joins.host.name+'@'+info.joins.host.address+'</p>'+
+                                   '   <p> Description'+info.joins.host.last_check_result.output+'</p>'+
+                                   '   <p> State: '+info.joins.host.state+'</p>'+
+                                   '   <p> *****Moniotred services*****</p>'+
+                                   '   <p>'+info.attrs.display_name+': '+ info.attrs.last_check_result.output+'</p>'; 
+                            }else{
+                                  template+= '   <p>'+info.attrs.display_name+': '+ info.attrs.last_check_result.output+'</p>'; 
+                            }
+					                      servNomber += 1 ;
+				                        
+                                })
+                          /*template=
+                                   '   <p> #'+info.joins.host.name+'@'+data.results.joins.host.address+'</p>'+
+                                   '   <p> Description'+info.joins.host.last_check_result.output+'</p>'+
+                                   '   <p> state: '+info.joins.host.name+'</p>'+
+                                   '   <p> monitored service : '+data.results.length+'</p>';*/
+                        
+                        /* data.results.forEach(function(info){
+					                     template += '   <p> '+info.attrs.name+'</p>'
+				                        })*/
+                             
+                               template += '  </div>' +
+                                           ' <div class="sigma-tooltip-footer">Number of services:'+servNomber+' </div>';         
+                        }
+                    });
+      }else{
+          template=
+                   '<div class="arrow"></div>' +
+                   ' <div class="sigma-tooltip-header">Icinga2 information</div>' +
+                   '  <div class="sigma-tooltip-body">' +
+                   '   <p> This device not monitored by Icinga2</p>' +
+                   '  </div>' +
+                   ' <div class="sigma-tooltip-footer">Number of connections: {{degree}}</div>';
+      }
+      node.degree = this.degree(node.id);
+      return Mustache.render(template, node);
+    }
+  }],
+  edge: [{
+        show: 'hovers',
+        hide: 'hovers',
+        cssClass: 'sigma-tooltip',
+        position: 'top',
+        autoadjust: true,
+        //template:  'Hello world !', // code for template
+                renderer: function(edge) {
+                         if(edge.data1.interface0 && edge.data1.interface1){
+                         template = '#{{data1.interface0}}#--#{{data1.interface1}}#';
+                         }else if(edge.data1.interface0 && !(edge.data1.interface1)){
+                           template = '#{{data1.interface0}}#';
+                           }else if(edge.data1.interface1 && !(edge.data1.interface0)){
+                           template = '#{{data1.interface1}}#'; 
+                            }else {
+                             template = '#link#'; 
+                           }
+                        return Mustache.render(template, edge);
+                                }
+               
+    }],
+  /*stage: {
+    template:
+    '<div class="arrow"></div>' +
+    '<div class="sigma-tooltip-header"> Menu </div>'
+  }*/
+};
+// Instanciate the tooltips plugin with a Mustache renderer for node tooltips:
+var tooltips = sigma.plugins.tooltips(s, s.renderers[0], config);
+
+
+// Manually open a tooltip on a node:
+//var n = s.graph.nodes('');
+//var prefix = s.renderers[0].camera.prefix;
+//tooltips.open(n, config.node[0], n[prefix + 'x'], n[prefix + 'y']);
+
+
+tooltips.bind('shown', function(event) {
+  console.log('tooltip shown', event);
+});
+
+tooltips.bind('hidden', function(event) {
+  console.log('tooltip hidden', event);
+});
+
+
+// DAG for maunpilation graph in the client side
+// Configure the DAG layout:
+  var dagreListener = sigma.layouts.dagre.configure(s, {
+  directed: true, // take edge direction into account
+  rankdir: 'LR',  // Direction for rank nodes. Can be TB, BT, LR, or RL,
+                  // where T = top, B = bottom, L = left, and R = right.
+  easing: 'quadraticInOut', // animation transition function
+  duration: 800,   // animation duration
+  nodes : s.graph.nodes().slice(0,30), // subset of nodes
+  boundingBox: {minX: 10, maxX: 20, minY: 10, maxY:20} // constrain layout bounds ; object or true (all current positions of the given nodes)
+});
+
+// Bind the events:
+dagreListener.bind('start stop interpolate', function(e) {
+  console.log(e.type);
+});
+
+// Start the DAG layout:
+sigma.layouts.dagre.start(s);
+
+// Drag nodes
+var activeState = sigma.plugins.activeState(s);
+
+// Initialize the dragNodes plugin:
+var dragListener = sigma.plugins.dragNodes(s, s.renderers[0], activeState);
+
+// Initialize the Select plugin:
+var select = sigma.plugins.select(s, activeState);
+
+// Initialize the Keyboard plugin:
+var keyboard = sigma.plugins.keyboard(s, s.renderers[0]);
+
+// Bind the Keyboard plugin to the Select plugin:
+select.bindKeyboard(keyboard);
+
+// Curve parallel edges:
+sigma.canvas.edges.autoCurve(s);
+s.refresh();
+
+dragListener.bind('startdrag', function(event) {
+  console.log(event);
+});
+dragListener.bind('drag', function(event) {
+  console.log(event);
+});
+dragListener.bind('drop', function(event) {
+  console.log(event);
+});
+dragListener.bind('dragend', function(event) {
+  console.log(event);
+});
+
+};
+
+// In case the WebGL renderer is used, we must wait for FontAwesome to be loaded.
+// http://www.w3.org/TR/css-font-loading/
+if (document.fonts) {
+  // document.fonts.ready() method is going to be replaced with
+  // document.fonts.ready attribute in the future.
+  var fontsReady = document.fonts.ready;
+  if (typeof(fontsReady) == "function") {
+    fontsReady = document.fonts.ready();
+  }
+  fontsReady.then(init);
+}
+else {
+  // wait or use a polyfill such as:
+  // https://github.com/zachleat/fontfaceonload
+  // https://github.com/smnh/FontLoader
+  setTimeout(init, 2000);
+}
+</script>                                  
+        </div>
+        <footer class="app-footer">
+            <div class="wrapper">
+                <span class="pull-right">1.0 <a href="#"><i class="fa fa-long-arrow-up"></i></a></span> TopVis © 2016 Copyright.
+            </div>
+        </footer>
+        <div>
+          <!-- Javascript Libs -->
+            <script type="text/javascript" src="../Bootstrap/lib/js/jquery.min.js"></script>
+            <script type="text/javascript" src="../Bootstrap/lib/js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="../Bootstrap/lib/js/Chart.min.js"></script>
+            <script type="text/javascript" src="../Bootstrap/lib/js/bootstrap-switch.min.js"></script>
+            <script type="text/javascript" src="../Bootstrap/lib/js/jquery.matchHeight-min.js"></script>
+            <script type="text/javascript" src="../Bootstrap/lib/js/jquery.dataTables.min.js"></script>
+            <script type="text/javascript" src="../Bootstrap/lib/js/dataTables.bootstrap.min.js"></script>
+            <script type="text/javascript" src="../Bootstrap/lib/js/select2.full.min.js"></script>
+            <script type="text/javascript" src="../Bootstrap/lib/js/ace/ace.js"></script>
+            <script type="text/javascript" src="../Bootstrap/lib/js/ace/mode-html.js"></script>
+            <script type="text/javascript" src="../Bootstrap/lib/js/ace/theme-github.js"></script>
+           
+            <!-- Javascript  -->
+            <script type="text/javascript" src="../js/app.js"></script>
+            <script type="text/javascript" src="../js/index.js"></script>
+           
+</body>
+
+</html>
+
