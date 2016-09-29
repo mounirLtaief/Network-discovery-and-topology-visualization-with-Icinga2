@@ -1,8 +1,13 @@
 /*
  * Get home page
  */
-exports.index = function (req, res) {
-    var neo4j = require('neo4j-driver').v1;
+var express = require('express');
+var router = express.Router();
+
+// Get Homepage
+router.get('/', ensureAuthenticated, function(req, res){
+	//router.get('/', function(req, res){
+	var neo4j = require('neo4j-driver').v1;
 	//var ipaddr = require('ip-address').Address4;
 	var request = require('request');
 	//var Address6 = require('ip-address').Address6;
@@ -27,7 +32,6 @@ exports.index = function (req, res) {
 				'X-HTTP-Method-Override': 'GET'
 		};
 	
-	
 	function is_monitored_by_icinga2(devices,ip) {
 		var is_monitored = [false, null];
 		devices.results.forEach(function (info) {
@@ -49,7 +53,7 @@ request(
 	function (error, response, body) {
  		if (!error && response.statusCode == 200) {
 			 icinga2api = JSON.parse(body);
-	session.run('MATCH (d)<-[r:CONNECTED_TO]->() RETURN DISTINCT(r)')
+	session.run('MATCH (d)<-[r:CONNECTED]->() RETURN DISTINCT(r)')
 		.then(function (result) {
 			var comp= 0 ;
 			result.records.forEach(function (record) {
@@ -67,9 +71,7 @@ request(
 
 			})
 
-	
-
-	session.run('MATCH(d:device) WHERE (d.Hostinfo IS NOT NULL AND d.SystemInfo IS NOT NULL ) RETURN d')
+	session.run('MATCH(d:device) WHERE (d.Hostinfo IS NOT NULL AND d.SystemInfo IS NOT NULL ) RETURN DISTINCT(d)')
 		.then(function (result) {
 			var icinga2 = false;
 			result.records.forEach(function (record) {
@@ -223,7 +225,7 @@ request(
 
 		});
 
-	session.run('MATCH(d:device) WHERE (d.Hostinfo IS NOT NULL AND d.SystemInfo IS NULL ) RETURN d ')
+	session.run('MATCH(d:device) WHERE (d.Hostinfo IS NOT NULL AND d.SystemInfo IS NULL ) RETURN DISTINCT(d) ')
 		.then(function (result) {
 			var icinga2 = false;
 			result.records.forEach(function (record) {
@@ -357,7 +359,7 @@ request(
 		});
 
 
-	session.run('MATCH(d:device) WHERE (d.Hostinfo IS NULL AND d.SystemInfo IS NOT NULL ) RETURN d ')
+	session.run('MATCH(d:device) WHERE (d.Hostinfo IS NULL AND d.SystemInfo IS NOT NULL ) RETURN DISTINCT(d) ')
 		.then(function (result) {
 			var icinga2 = false;
 			result.records.forEach(function (record) {
@@ -414,7 +416,7 @@ request(
 
 		});
 
-	session.run('MATCH(d:device) WHERE (d.address IS NOT NULL AND d.mac IS NOT NULL ) RETURN d ')
+	session.run('MATCH(d:device) WHERE (d.address IS NOT NULL AND d.mac IS NOT NULL ) RETURN DISTINCT(d)')
 		.then(function (result) {
 			var icinga2 = false;
 			result.records.forEach(function (record) {
@@ -445,7 +447,7 @@ request(
 				);
 
 			});
-			res.render('design', {
+			res.render('index', {
 				links: linkArr,
 				//devices : deviceArr
 				snmp_scan_dev: devices1,
@@ -464,6 +466,20 @@ request(
 		console.log(error);
 		}
 		} 
+	
 		 )
+	
+});
 
-	};
+function ensureAuthenticated(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	} else {
+		//req.flash('error_msg','You are not logged in');
+		res.redirect('/users/login');
+		//res.render('login');
+		}
+}
+
+module.exports = router;
+
