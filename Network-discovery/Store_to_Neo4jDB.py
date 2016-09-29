@@ -27,118 +27,14 @@ import Topology_Discovery as tp
 import json
 import ast
 
-# query0 = '''
-#         UNWIND {host} AS host
-#         MERGE (d:device { name: link[0]['hostname'],address: link[0]['address'],mac: link[0]['mac'] })
-#         '''
-#
-# query1 = '''
-#         UNWIND {host} AS host
-#         MERGE (d:device { name: link[0]['hostname'],address: link[0]['address'],mac: link[0]['mac'] })
-#         '''
-#
-# query3 = ('\n'
-#           '        UNWIND {host} AS host\n'
-#           '	    MERGE (d:device { hostname = "unknown",address: host[0],mac: host[1] })\n'
-#           '        ')
 
-# def identify_services(dev):
-#     # serv[ 'name' ]
-#     servnumber = 0
-#     l = len ( dev[ 'services' ] )
-#     query= ''',discoveredServices:%s''' %l
-#     for serv in dev[ 'services' ]:
-#         query += ''',services_%s:%s,service_%s_Desc:%s,service_%s_protocol:%s,service_%s_ports:%s,
-#                     service_%s_status:%s'''%(servnumber,[str(serv[ 'name' ])],servnumber,[str(serv[ 'description' ])],
-#                                              servnumber,[str(serv[ 'protocol' ])],servnumber,serv[ 'ports' ],
-#                                              servnumber,[str(serv[ 'status' ])])
-#         servnumber += 1
-#
-#     return query
-
-
-# def identify_vuls(dev):
-#     vulnumber = 0
-#     l = len ( dev[ 'vuls' ] )
-#     query = ''',discoveredVuls:%s''' %l
-#
-#     for vul in dev[ 'vuls' ]:
-#         # description = (vul[ 'desc' ]).replace ( '\n','*' )
-#         # description = description.replace(':','')
-#         # description = description.replace ( '!','' )
-#         # description = description.replace ( ' ','' )
-#         # description = description.replace ( '/','g' )
-#         # description = description.replace ( '','' )
-#         # description = (vul[ 'desc' ]).split('\n')
-#         # for desc in description:
-#         #     d = desc.split(':')
-#         #     if len(d) == 1:
-#         #         query+=', vul_%s_desc: %s' %(vulnumber, d[0])
-#         #     if len(d)>1:
-#         #         query += ', vul_%s_desc_%s: %s' % (vulnumber,d[ 0 ],d[1])
-#
-#         type = vul[ 'type' ]
-#         # ,vulnumber,description    ,vul_%s_desc:%s
-#         query += ''',vul_%s:%s,vul_%s_desc:%s,vul_%s_resolution:%s,vul_%s_severity:%s,vul_%s_type:%s,
-#                  vul_%s_impact_integrity:%s,vul_%s_impact_confidentiality:%s,vul_%s_impact_availability:%s,
-#                  vul_%s_impact_accountability:%s''' % (vulnumber,[str(vul[ 'name' ])],vulnumber,[str(vul[ 'desc' ])],vulnumber,
-#                                                        [str(vul[ 'resolution' ])],vulnumber,[str(vul[ 'severity' ])],vulnumber,
-#                                                        [str(type)],vulnumber,[str(vul[ 'impact' ]['integrity'])],vulnumber,
-#                                                        [str(vul[ 'impact' ]['confidentiality'])],vulnumber,
-#                                                        [str(vul[ 'impact' ]['availability'])],vulnumber,[str(vul[ 'impact' ]['accountability'])])
-#
-#         if type == 'VulnerabilityWeb':
-#             query += ''',vul_%s_website:%s''' % (vulnumber,[str(vul[ 'website' ])])
-#         vulnumber += 1
-#
-#     return query
 
 def query_scan(dev):
 
-    # query2 = '''
-    #             UNWIND {host} AS host
-    #             MERGE (d:device { hostname: host['interface']['hostnames'],hostdescription : host['host']['description'],
-    #             os : host['host']['os'],macInterface: host['interface']['mac'],addressInterface : host['interface']['address'],
-    #             makInterface : host['interface']['mask'],gatewayInterface : host['interface']['gateway'],
-    #             networkSegmentInterfaces : host['interface']['network_segment'],interfaceType : host['interface']['description']
-    #          '''
-
-    query = '''MERGE (d:device { Hostinfo: %s,InterfacesScan:%s,Services: %s,Vuls: %s})''' %([str(dev['host'])],
+    query = '''MERGE (d:node { Hostinfo: %s,InterfacesScan:%s,Services: %s,Vuls: %s})''' %([str(dev['host'])],
                                                                                            [str(dev['interface'])],
                                                                                            [ str ( dev[ 'services' ] ) ],
                                                                                            [ str ( dev[ 'vuls' ] ) ])
-    # query = '''UNWIND {info} AS info
-    #            MERGE (d:device { Hostinfo: info['host'],InterfacesScan: info['interface'],Services: info['service'],
-    #            Vuls: info['vuls']});'''
-    # query = '''MERGE (d:device { Hostinfo: %s,InterfacesScan:%s'''%([str(dev['host'])],[str(dev['interface'])])
-    #
-    # if dev[ 'services' ] == [] and dev[ 'vuls' ] == []:
-    #     query += ''', running_services : "0", VulsNumber : "0"})'''
-    #     return query
-    #
-    # if dev[ 'services' ]  != [] and dev[ 'vuls' ]  == []:
-    #     # query2 += identify_services(dev)
-    #     query += ''', running_services: %s,discoverredServices: %s,
-    #      discoveredVuls : "0" })''' %(len(dev[ 'services' ]),[str(dev[ 'services' ])])
-    #     return query
-    #
-    # if dev[ 'services' ] == [] and dev[ 'vuls' ]  != []:
-    #     # query2 += identify_vuls(dev)
-    #     query += ''',VulsNumber: %s, discoveredVuls: %s,
-    #                 discoveredServices : "0" })''' % (len(dev['vuls']),[ str ( dev[ 'vuls' ] ) ])
-    #     # query2 += ''', discoveredServices : "0" })'''
-    #     return query
-    #
-    # if dev[ 'services' ] != [] and dev[ 'vuls' ] != 0:
-    #     # query2 += identify_services ( dev )
-    #     # query2 += identify_vuls ( dev )
-    #     query += ''',running_services: %s,discoverredServices: %s,VulsNumber: %s,
-    #                 discoveredVuls: %s })''' % (len(dev[ 'services' ]),[ str ( dev[ 'services' ] ) ],
-    #                                             len(dev['vuls']),[ str ( dev[ 'vuls' ] ) ])
-    #     # query2 += ''',VulsNumber: %s,discoveredVuls: %s''' % (len(dev['vuls']),[ str ( dev[ 'vuls' ] ) ])
-    #     # query2 += '''})'''
-    # return query
-
     return query
 
 
@@ -174,28 +70,16 @@ def verify_scan(device,scan_info):
 
 
 def query_snmp ( dev):
-    query = '''MERGE (d:device {SystemInfo: %s,InterfacesSnmp:%s, Neighbour:%s,NextHops:%s })''' % ([ str ( dev[ 'system' ] ) ],
+    query = '''MERGE (d:node {SystemInfo: %s,InterfacesSnmp:%s, Neighbour:%s,NextHops:%s })''' % ([ str ( dev[ 'system' ] ) ],
                                                                                                   [ str ( dev[ 'interfaces' ] ) ],
                                                                                                   [ str ( dev['neighbours' ] ) ],
                                                                                                   [ str ( dev['nextRoute' ] ) ])
-    # query = '''UNWIND {info} AS info
-    #         MERGE (d:device {SystemInfo: info[''],InterfacesSnmp:info[''], Neighbour:info[''],NextHops:info[''] })
-    #
-    #         '''
-    # dev = json.loads(dev)
-    # nextroute = str ( dev[ 'nextRoute' ] ).replace(' ','')
-    # neighbour = str ( dev[ 'neighbours' ] ).replace(' ','')
-    # interfaces = str ( dev[ 'interfaces' ] ).replace(' ','')
-    # system = str ( dev['system' ] ).replace(' ','')
-    # query = '''MERGE (d:device {SystemInfo: %s,InterfacesSnmp:%s, Neighbour:%s,NextHops:%s})" ''' % ([str(dev['system' ])],
-    #                                                                                              [str(dev[ 'interfaces' ])],
-    #                                                                                              [str(dev[ 'neighbours' ])],
-    #                                                                                              [str(dev[ 'nextRoute' ])])
+                                                                                                  [str(dev[ 'nextRoute' ])])
     return query
 
 
 def query_scan_snmp(dev1,dev2):
-    query = '''MERGE (d:device { Hostinfo: %s, InterfacesScan:%s, Services: %s, Vuls: %s, SystemInfo: %s, InterfacesSnmp:%s,
+    query = '''MERGE (d:node { Hostinfo: %s, InterfacesScan:%s, Services: %s, Vuls: %s, SystemInfo: %s, InterfacesSnmp:%s,
                Neighbour:%s, NextHops:%s })''' % ([ str ( dev1[ 'host' ] ) ],[ str ( dev1[ 'interface' ] ) ],[ str ( dev1[ 'services' ] ) ],
                                  [ str ( dev1[ 'vuls' ] ) ],[ str ( dev2[ 'system' ] ) ],[ str ( dev2[ 'interfaces' ] ) ],
                                  [ str ( dev2[ 'neighbours' ] ) ],[ str ( dev2['nextRoute' ] ) ])
@@ -214,7 +98,7 @@ def insert_dev_to_db(cred,devices,snmp_info,scan_info):
         if not snmp_dev[ 0 ] and scan_dev[ 0 ]:
             insert_to_db ( cred,query_scan( scan_dev[ 1 ] ) )
         if not snmp_dev[ 0 ] and not scan_dev[ 0 ]:
-            query = '''MERGE (d:device {address: %s,mac: %s})'''%([str(dev[0])],[str(dev[1])])
+            query = '''MERGE (d:dev {address: %s,mac: %s})'''%([str(dev[0])],[str(dev[1])])
             insert_to_db ( cred,query )
 
     return 0
@@ -231,21 +115,12 @@ def match_from_neo4j(cred,query):
 
 
 def get_source_node(cred,src):
-    query = '''MATCH (n:device)
+    query = '''MATCH (n:node)
                WHERE n.InterfacesSnmp IS NOT NULL
                RETURN ID(n),n.InterfacesSnmp;
             '''
     result = match_from_neo4j(cred,query)
     return get_id(result,src)
-    # print json.loads(result)
-    # print src
-    # for record in result:
-    #     # print record
-    #     if record['n.InterfacesSnmp'] ==
-    #     sourceID = record['ID(n)']
-    # # print sourceID
-    # return sourceID
-
 
 def get_id(result,node):
     for record in result:
@@ -256,7 +131,7 @@ def get_id(result,node):
 
 
 def get_node_id(cred,node):
-    query = '''MATCH (n:device)
+    query = '''MATCH (n:node)
                WHERE n.mac IS NOT NULL AND n.address IS NOT NULL
                RETURN ID(n),n.mac,n.address;
             '''
@@ -281,7 +156,7 @@ def get_target_node(cred,dest):
 
 
 def verfiy_target(cred,dest):
-    query1 = '''MATCH (n:device)
+    query1 = '''MATCH (n:node)
                     RETURN ID(n),n.InterfacesScan ;
                 '''
     result = match_from_neo4j ( cred,query1 )
@@ -300,30 +175,30 @@ def insert_rel_type_0(cred,src,if_src,dest):
     targetNodeID = get_target_node(cred,dest)
     # print sourceNodeID
     # print targetNodeID
-    query = '''MATCH (d1:device),(d2:device)
+    query = '''MATCH (d1:node),(d2:node)
                WHERE ID(d1) = %s AND ID(d2)=%s
-               MERGE (d1)<-[l:CONNECTED_TO {interface_0:%s}]->(d2);
+               MERGE (d1)<-[l:CONNECT {interface_0:%s}]->(d2);
             '''%(sourceNodeID,targetNodeID,[ str ( if_src ) ])
     insert_to_db(cred,query)
     return 0
 
 
 def insert_rel_type_1(cred,src,if_src,dest,if_dest):
-    query = ''' MATCH (d:device)
+    query = ''' MATCH (d:node)
                 WHERE d.InterfacesSnmp IS NOT NULL
                 RETURN ID(d),d.InterfacesSnmp;
             '''
     src_id = get_id(match_from_neo4j(cred,query),src)
     dest_id = get_id(match_from_neo4j(cred,query),dest)
 
-    query_insert = '''MATCH (d1:device),(d2:device)
+    query_insert = '''MATCH (d1:node),(d2:node)
                       WHERE ID(d1) = %s AND ID(d2)=%s
-                      MERGE (d1)<-[l:CONNECTED_TO {interface_0:%s}]->(d2);
+                      MERGE (d1)<-[l:CONNECT {interface_0:%s}]->(d2);
                    ''' % (src_id,dest_id,[ str ( if_src ) ],[ str ( if_dest ) ])
     insert_to_db ( cred,query )
-    # query = ''' MATCH (d1:device),(d2:device)
+    # query = ''' MATCH (d1:node),(d2:node)
     #             WHERE d1.InterfacesSnmp = %s AND d2.InterfacesSnmp = %s
-    #             MERGE (d1)<-[l:CONNECTED_TO {interface_0:%s,interface_1:%s}]->(d2);
+    #             MERGE (d1)<-[l:CONNECTED {interface_0:%s,interface_1:%s}]->(d2);
     #         ''' %([ str ( src[ 'interfaces' ] ) ],[ str ( dest[ 'interfaces' ] ) ],[ str ( if_src ) ],[ str ( if_dest ) ])
     # match_from_neo4j(cred,query)
     return 0

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  topology_phase_2.py
+#  Topology_Discovery.py
 #  
 #  Copyright 2016 mounir <mounir@kali>
 #  
@@ -445,7 +445,7 @@ def hosts_address_mac(hosts):
 
 
 def get_devices_from_db(cred):
-    query = '''MATCH (n:device)
+    query = '''MATCH (n:node)
                WHERE n.InterfacesSnmp IS NOT NULL
                RETURN n.SystemInfo,n.InterfacesSnmp,n.Neighbour,n.NextHops
             '''
@@ -459,7 +459,7 @@ def get_devices_from_db(cred):
         snmp_devices.append(snmp_dev)
     # print snmp_devices
 
-    query2= '''MATCH (n:device)
+    query2= '''MATCH (n:node)
                WHERE n.InterfacesSnmp IS NULL AND n.InterfacesScan IS NOT NULL
                RETURN n.InterfacesScan;
             '''
@@ -471,7 +471,7 @@ def get_devices_from_db(cred):
 
     # print nn_snmp_dev
 
-    query3='''MATCH (n:device)
+    query3='''MATCH (n:node)
               WHERE n.mac IS NOT NULL AND n.address IS NOT NULL
               RETURN n.address,n.mac;
             '''
@@ -487,7 +487,7 @@ def get_devices_from_db(cred):
 
 
 def match_from_neo4j(cred):
-    query = '''MATCH (n:device)
+    query = '''MATCH (n:node)
                    WHERE n.mac IS NOT NULL AND n.address IS NOT NULL
                    RETURN ID(n);
                 '''
@@ -498,102 +498,24 @@ def match_from_neo4j(cred):
 def main(args):
 
     couchdb = db_auth.CouchDB ( )
-    couchdb.dbname = 'scan-test123'
+    couchdb.dbname = 'test'
     neo4jdb = db_auth.Neo4jDB ( )
     neo4jdb.password = 'azerty159'
     cred = neo4jdb.get_Neo4j_credentials ( )
-    # cred1 = couchdb.get_couchdb_credentials()
-    # hosts = RetrieveData.get_hosts_info ( cred1 )
-    # hosts_mac_ip = hosts_address_mac ( hosts )
-    # print hosts_mac_ip
-    devices = get_devices_from_db(cred)
-    connectivity_discovery ( cred,devices[0],devices[1] )
-    # query = '''MATCH (n:device)
-    #            where n.InterfacesSnmp IS NOT NULL
-    #            return n
-    #            '''
-    # query = '''MATCH (n:device)
-    #            WHERE n.mac IS NOT NULL AND n.address IS NOT NULL
-    #            RETURN ID(n);
-    #         '''
-    # result = storeData.match_from_neo4j ( cred,query )
-    # for record in result:
-    #     print record ['ID(n)']
-    # query = '''MATCH (n:device)
-    #            WHERE n.InterfacesSnmp =~ %s
-    #            RETURN ID(n),n.InterfacesSnmp
-    #             '''% (devices[0][0][ 'interfaces' ])
-    # query = '''MATCH (n:device)
-    #            RETURN ID(n),n.InterfacesSnmp
-    #         '''% (str ( devices[0][0][ 'interfaces' ] ) )
-    # print devices[0][0][ 'interfaces' ]
-    # k =([str ( devices[0][0][ 'interfaces' ] ) ])
-    # print k
-    # result = storeData.match_from_neo4j ( cred,query )
-    # print result
-    # for record in result :
-    #     print record['n.InterfacesSnmp']
-    # print str([ str ( devices[0][0][ 'interfaces' ] ) ])
-    # query1 = '''MATCH (n:device)
-    #            RETURN n.InterfacesScan ;
-    #         '''
-    # query = '''MATCH (n:device)
-    #            WHERE (ID(n)=%s)
-    #            RETURN ID(n);
-    #         '''%('3526')
-
-    # query0 = '''UNWIND {siks} AS siks
-    #             MATCH (n:device)
-    #             WHERE n.InterfacesSnmp = siks['interfaces']
-    #             RETURN ID(n),n.InterfacesSnmp;
-    #         '''
-    # result = match_from_neo4j(cred,query0,devices[0][0])
-    # print result
-    # for record in result:
-    #     print record['n.InterfacesSnmp']
-    #     print record['ID(n)']
-        # print ['n.InterfacesScan']
-        # if record["n.InterfacesScan"] != None:
-        #     v =ast.literal_eval(record["n.InterfacesScan"][0])
-        #     print v['mac']
-
-    # result2= storeData.match_from_neo4j(cred,query)
-    # # print json.loads(result2)
-    # for record in result2:
-    #     print result2[0]['ID(n)']
-
-    # hosts = RetrieveData.get_hosts_info(cred1)
-    # print hosts
-    # hosts_mac_ip = hosts_address_mac(hosts)
-    # print hosts_mac_ip
-    # print  "SNMP Discovery"
-    # dev = device_discovery(hosts_mac_ip)
-    # print dev
-    # storeData.insert_to_db(cred,storeData.query_scan(hosts[0]))
-    # print storeData.query_scan ( hosts[ 0 ] )
-    # print storeData.query_snmp ( dev[1][0] )
-
-    # print "Storage to neo4j DB"
-    # snmp_dev = dev[1][0]
-    # snmp_dev = json.dumps(snmp_dev)
-    # print snmp_dev
-    # storeData.insert_to_db ( cred,storeData.query_snmp ( dev[1][0] ) )
-    # storeData.insert_dev_to_db (cred, dev[0],dev[1],hosts)
-
-    # connectivity_discovery(snmp_dev,non_snmp_dev)
-    # couchdb = db_auth.CouchDB()
-    # couchdb.dbname = 'scan-test123'
-    # neo4jdb = db_auth.Neo4jDB()
-    # neo4jdb.password = 'azerty159'
-    # hosts = RetrieveData.get_hosts_info (couchdb )
-    # cred = neo4jdb.get_Neo4j_credentials()
-    # print cred
-    # print hosts
-    #
-    # for host in hosts:
-    #     print storeData.query2_construct(host)
-    #     storeData.insert_to_db(cred,storeData.query2_construct(host))
-
+    cred1 = couchdb.get_couchdb_credentials()
+    hosts = RetrieveData.get_hosts_info(cred1)
+    hosts_mac_ip = hosts_address_mac(hosts)
+    devices = device_discovery(hosts_mac_ip)
+    print "All devices"
+    print devices[0]
+    print "snmp devices"
+    print devices[1]
+    print "non snmp devices"
+    print devices[2]
+    print "scan devices"
+    print hosts
+    storeData.insert_dev_to_db (cred, devices[0],devices[1],hosts)
+    connectivity_discovery ( cred,devices[1],devices[2] )
     return 0
 
 
